@@ -17,7 +17,11 @@ class WikiSpider(scrapy.Spider):
         self.store_page(record)
 
         links = self.get_links(response)
-        self.store_links(links)
+
+        links_to_search=list()
+        for i in range(5): # choose 5 random links
+            links_to_search.append(random.choice(links))
+        self.store_links(links_to_search)
 
         next_link = self.get_random_link()
         yield scrapy.Request(next_link, callback=self.parse)
