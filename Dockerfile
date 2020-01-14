@@ -3,7 +3,7 @@
 # OS Support also exists for jessie & stretch (slim and full).
 # See https://hub.docker.com/r/library/python/ for all supported Python
 # tags from Docker Hub.
-FROM ubuntu
+FROM python:3.7.0
 
 # If you prefer miniconda:
 #FROM continuumio/miniconda3
@@ -14,16 +14,10 @@ WORKDIR /app
 ADD . /app
 
 RUN apt-get update 
-RUN apt-get --assume-yes install python3
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get -y install gcc mono-mcs
-RUN rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 RUN pytest
-RUN scrapy crawl wiki
 CMD ["scrapy crawl wiki"]
 
 # Using pipenv:
