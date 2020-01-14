@@ -10,27 +10,36 @@ except:
 
 class WikiSpider(scrapy.Spider):
     name = "wiki"
-    start_urls = ["http://en.wikipedia.org/wiki/Python_(programming_language)"]
+    start_urls = ["http://en.wikipedia.org/wiki/Python_(programming_language)",
+                  "https://en.wikipedia.org/wiki/Game",
+                  "https://en.wikipedia.org/wiki/Queen%27s_University_Belfast"]
+
     def parse(self, response):
-        
+
         record = self.build_record(response)
         self.store_page(record)
 
         links = self.get_links(response)
 
-        links_to_search=list()
-        for i in range(5): # choose 5 random links
+        links_to_search = list()
+        for i in range(5):  # choose 5 random links
             links_to_search.append(random.choice(links))
         self.store_links(links_to_search)
 
         next_link = self.get_random_link()
         yield scrapy.Request(next_link, callback=self.parse)
-
+        next_link = self.get_random_link()
+        yield scrapy.Request(next_link, callback=self.parse)
 
     def get_random_link(self):
         table = dynamoDB.get_table('Links')
         records = table.scan(AttributesToGet=['URL'])['Items']
-        return random.choice(records)['URL']
+        link = random.choice(records)['URL']
+        table.delete_item(
+            Key={
+                'URL': link,
+            })
+        return link
 
     def get_links(self, response):
         wiki_links = list()
