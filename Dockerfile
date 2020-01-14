@@ -18,7 +18,7 @@ RUN apt-get update
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 RUN pytest
-CMD ["scrapy crawl wiki"]
+CMD "python3 -m scrapy crawl wiki"
 
 # Using pipenv:
 #RUN python3 -m pip install pipenv
