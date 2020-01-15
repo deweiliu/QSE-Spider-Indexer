@@ -9,16 +9,17 @@ FROM python:3.7.0
 #FROM continuumio/miniconda3
 
 LABEL Name=qse-indexing Version=0.0.1
+EXPOSE 80
 
 WORKDIR /app
 ADD . /app
 
-RUN apt-get update 
-
-RUN python3 -m pip install --upgrade pip
+# Using pip:
+RUN pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 RUN pytest
-CMD "python3 -m scrapy crawl wiki"
+
+CMD ["python3", "run.py"]
 
 # Using pipenv:
 #RUN python3 -m pip install pipenv
